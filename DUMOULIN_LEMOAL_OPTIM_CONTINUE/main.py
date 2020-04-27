@@ -10,16 +10,7 @@ from perceptron import Perceptron
 from sklearn import datasets
 from sklearn.decomposition import PCA
 
-
-#donnees_brutes = pd.read_csv('data_buy_sell.csv', sep=";", index_col=0)
-
-#print(donnees_brutes)
-
-#print(donnees_brutes["time"][4])
-        
-#perceptron = Perceptron(donnees_brutes)
-#perceptron.imprimer()
-
+'''
 donnees = [[2, 3, 2, 2], [60, 3, 7, 2], [40, 3, 2, 8], [40, 9, 2, 2], [2, 2, 2, 2]]
 objectif = [0, 1, 1, 1, 0]
 lambdda = 0.1
@@ -27,19 +18,6 @@ lambdda = 0.1
 donnees2 = [[2, 3, 2, 2], [60, 3, 7, 2], [20, 3, 2, 8], [40, 9, 2, 2], [20, 2, 2, 2], [2, 2, 2, 2], [40, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]]
 objectif2 = [0, 1, 1, 1, 0, 1, 0, 1, 0]
 
-iris = datasets.load_iris()
-X = iris.data[:100, :2]  # we only take the first two features.
-y = iris.target[:100]
-#print(X)
-#print(y)
-
-Xo = []
-for i in range (len(X)):
-    Xoo = []
-    for j in range (len(X[i])):
-        Xoo.append(X[i][j])
-    Xoo.append(1)
-    Xo.append(Xoo)
 
 for i in range (len(donnees)):
     donnees[i].append(1)
@@ -48,5 +26,40 @@ perceptron = Perceptron(4)
 for i in range (500):
     print("// Itération", i)
     perceptron.calculFonctionEntrainement(donnees, objectif, lambdda)
+''' 
 
+def remplissageObjectif10Suivants(donnees_brutes):
+    i = 1
+    derniereValeurStep = 1
+    objectif = []
+    for k in range(1, 291):
+        i = derniereValeurStep
+        step = donnees_brutes['step'][i]
+        augmentation = 0
+        minimum = 9999999999
+        while donnees_brutes['step'][i] == step:
+            if (donnees_brutes['side'][i] == 'bids'):
+                if donnees_brutes['price'][i] < minimum:
+                    minimum = donnees_brutes['price'][i]
+            i += 1
+        derniereValeurStep = i
+        while augmentation == 0 and donnees_brutes['step'][i] <= step+10:    #Tant qu'on sait pas encore si ça a augmenté, et qu'on est pas 10 steps plus loin
+            if (donnees_brutes['side'][i] == 'asks') and (donnees_brutes['product_id'][i] == 'BTC-EUR'):     #Si c'est une demande et que c'est le même type d'échange
+                if (donnees_brutes['price'][i] > minimum):   #Si la demande est plus élevée que le prix de l'offre
+                    augmentation = 1
+            objectif.append(augmentation)
+            i += 1
+    return objectif
+
+donnees_brutes = pd.read_csv('ask_bid.csv', sep=";", index_col=0)
+objectif = []
+print(donnees_brutes)
+#types = type(donnees_brutes['price'][5])
+#print(types)
+objectif = remplissageObjectif10Suivants(donnees_brutes)
+print(objectif)
+
+'''
+Les données qu'on utilise ça va être blablabla
+'''
 
