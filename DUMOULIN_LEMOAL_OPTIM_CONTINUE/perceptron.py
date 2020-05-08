@@ -8,8 +8,7 @@ from mpmath import *
 from random import *
 
 #Ce perceptron est le premier que nous avons développé sur les séances de TP.
-#Nous le gardons même s'il ne correspond pas à une descente de gradient particulière 
-#puisque celui-ci est fonctionnel et qu'il n'y aurait pas de raison de le retirer.
+#Il implémente l'algorithme de descente de gradient steepest descent.
 class Perceptron:
     
     #Les poids sont initialisés aléatoirement entre 0 et 1 lorsque le perceptron est créé
